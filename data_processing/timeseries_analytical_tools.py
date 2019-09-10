@@ -1,11 +1,5 @@
 """Module for timeseries analytical tools."""
 import pandas as pd
-import numpy as np
-import glob
-import os
-import seaborn as sns
-import matplotlib.pyplot as plt
-import datetime
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.stattools import adfuller
 import statsmodels.api as sm
@@ -87,6 +81,15 @@ def plot_act_pacf(close, freq, lags=24):
     #plot the PACF
     fig = sm.graphics.tsa.plot_pacf(close.diff(freq).dropna(), lags=lags, ax=ax2)
 
+
+def plot_line_price(data, filename):
+    """Plot and save line price chart."""
+    ax = data.plot(figsize=(15, 6))
+    ax.set_ylabel('Price (Cents per Bushel)')
+    ax.set_xlabel('Date')
+    # To capture x label.
+    plt.subplots_adjust(bottom=0.22)
+    plt.savefig(filename, transparent=True)
 
 def sarimax_plot(data, order, trend, seasonal_order, train_delta, predict_delta, start_date=None, filename=None):
     """Build sarimax model and plot results."""
