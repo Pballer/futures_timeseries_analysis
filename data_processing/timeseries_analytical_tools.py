@@ -59,15 +59,23 @@ def find_optimal_pdq(data, train_delta, start_train=None):
                                                 enforce_stationarity=False,
                                                 enforce_invertibility=False)
                 results = mod.fit()
-                result_string = 'ARIMA{}x{}12 - AIC:{}'.format(param, param_seasonal, results.aic)
-                test_results.append([result_string, results.aic])
+                prediction = results.predict(results.nobs, results.nobs + train_delta)
+                actual = data[-train_delta:]
+                # MSE
+                mse = ((prediction - actual) ** 2).sum()
+
+                result_string = 'ARIMA{}x{}12 - AIC:{} - MSE:{}'.format(param, param_seasonal, results.aic, mse)
+                test_results.append([result_string, results.aic, mse])
 
             except Exception as e:
                 print('exception in:', pdq, seasonal_pdq)
                 print(e)
                 continue
-    results_df = pd.DataFrame(test_results, columns=['key', 'aic'])
-    print(results_df.loc[results_df.aic.idxmin()])
+    results_df = pd.DataFrame(test_results, columns=['key', 'aic', 'mse'])
+    min_aic = results_df.sort_values('aic').head()
+    print('Min AIC:', min_aic, sep='\n')
+    min_mse = results_df.sort_values('mse').head()
+    print('Min MSE:', min_mse, sep='\n')
     return results_df
 
 
@@ -91,9 +99,10 @@ def plot_line_price(data, filename):
     plt.subplots_adjust(bottom=0.22)
     plt.savefig(filename, transparent=True)
 
+
 def sarimax_plot(data, order, trend, seasonal_order, train_delta, predict_delta, start_date=None, filename=None):
     """Build sarimax model and plot results."""
-    train_date = data.index.max() - pd.DateOffset(months=12)
+    train_date = data.index.max() - pd.DateOffset(months=train_delta)
     mod = sm.tsa.statespace.SARIMAX(
         data.loc[start_date:train_date],
         trend=trend,
