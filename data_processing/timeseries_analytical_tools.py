@@ -91,9 +91,10 @@ def plot_line_price(data, filename):
     plt.subplots_adjust(bottom=0.22)
     plt.savefig(filename, transparent=True)
 
+
 def sarimax_plot(data, order, trend, seasonal_order, train_delta, predict_delta, start_date=None, filename=None):
     """Build sarimax model and plot results."""
-    train_date = data.index.max() - pd.DateOffset(months=12)
+    train_date = data.index.max() - pd.DateOffset(months=train_delta)
     mod = sm.tsa.statespace.SARIMAX(
         data.loc[start_date:train_date],
         trend=trend,
