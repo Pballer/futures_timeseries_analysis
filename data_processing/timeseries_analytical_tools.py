@@ -1,9 +1,9 @@
 """Module for timeseries analytical tools."""
+import itertools
 import pandas as pd
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.stattools import adfuller
 import statsmodels.api as sm
-import itertools
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 plt.style.use('fivethirtyeight')
@@ -36,7 +36,7 @@ def seasonal_charts(close, freq):
     """Generate stats models seasonal charts."""
     decomposition = seasonal_decompose(close, freq=freq)
     fig = plt.figure()
-    fig = decomposition.plot();
+    fig = decomposition.plot()
     fig.set_size_inches(15, 8)
     return decomposition
 
@@ -81,7 +81,7 @@ def find_optimal_pdq(data, train_delta, start_train=None):
 
 def plot_act_pacf(close, freq, lags=24):
     """Plot ACT and PACF charts."""
-    fig = plt.figure(figsize=(12,8))
+    fig = plt.figure(figsize=(12, 8))
     ax1 = fig.add_subplot(211)
     #plot the ACF
     fig = sm.graphics.tsa.plot_acf(close.diff(freq).dropna(), lags=lags, ax=ax1)

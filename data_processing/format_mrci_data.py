@@ -1,10 +1,9 @@
 """Module for loading raw MRCI data and pre-processing it for analysis."""
 
-import pandas as pd
-import numpy as np
 import glob
 import os
-import re
+import pandas as pd
+import numpy as np
 
 SOYBEANS = 'Soybeans(CBOT)'
 CORN = 'Corn(CBOT)'
@@ -37,7 +36,6 @@ def format_monthly_data(data, contract_name):
     """Format specific commodity to monthly price."""
     futures = get_front_month(CORN, data)
     futures_monthly = get_monthly_average(futures.close)
-    file_name = re.sub('[() ]', '', SOYBEANS)
     futures_monthly.to_pickle('clean_data/{}_monthly.pkl'.format((contract_name)))
 
 

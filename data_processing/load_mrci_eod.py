@@ -5,7 +5,7 @@ import requests
 from tqdm import tqdm
 from format_mrci_data import format_raw_mrci_data
 
-column_names = ['future_name', 'Mth', 'Date', 'Open', 'High', 'Low', 'Close', 'Change', 'Volume', 'Open Int', 'Change']
+COLUMN_NAMES = ['future_name', 'Mth', 'Date', 'Open', 'High', 'Low', 'Close', 'Change', 'Volume', 'Open Int', 'Change']
 
 
 def get_mrci_hloc_eod(url):
@@ -35,7 +35,7 @@ if __name__ == '__main__':
         url = base_url.format(year=date.year, yymmdd=date.strftime('%y%m%d'))
         print(url)
         data = get_mrci_hloc_eod(url)
-        futures_eod = pd.DataFrame(data, columns=column_names)
+        futures_eod = pd.DataFrame(data, columns=COLUMN_NAMES)
         if not futures_eod.empty:
             file_name = 'data/mrci_{yymmdd}.csv'.format(yymmdd=date.strftime('%y%m%d'))
             futures_eod.to_csv(file_name)
